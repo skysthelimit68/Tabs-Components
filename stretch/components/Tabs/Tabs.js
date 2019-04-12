@@ -1,9 +1,25 @@
 
+class Tabs {
+  constructor(elements, selectedTab, selectedItem) {
+    
+    this.elements = elements;
+    
+    this.tabLinks = Array.from(this.elements).map(elem => new TabLink(elem, this));
+    
+    this.selectedTab = selectedTab;
+    
+    this.selectedItem = selectedItem;
+  }
+}
+
 class TabLink {
-  constructor(element) {
+  constructor(element, tabs) {
+    
     // Assign this.element to the passed in DOM element
     this.element = element;
     
+    //reference to Tabs instance
+    this.tabs = tabs;
     // Get the custom data attribute on the Link
     this.data = element.dataset.tab;
     
@@ -11,42 +27,48 @@ class TabLink {
     this.itemElement = document.querySelector(`.tabs-item[data-tab="${this.data}"]`);
     
     // Using the Item element, create a new instance of the TabItem class
-    this.tabItem = new TabItem(this.itemElement);
+    this.tabItem = new TabItem(this.itemElement, this.tabs);
     
     // Add a click event listener on this instance, calling the select method on click
     this.element.addEventListener('click', () => {
       this.select();
+      this.deselect(this.tabs.selectedTab);
+      this.tabs.selectedTab = this.element; 
     })
   }
 
   select() {
-    // Get all of the elements with the tabs-link class
-    const links = document.querySelectorAll(".tabs-link");
-
-    // Using a loop or the forEach method remove the 'tabs-link-selected' class from all of the links
-    links.forEach(elem => elem.classList.remove("tabs-link-selected"));
-
     // Add a class named "tabs-link-selected" to this link
     this.element.classList.add("tabs-link-selected");
     
     // Call the select method on the item associated with this link
     this.tabItem.select();
   }
+
+  deselect(selectedTab) {
+    if(selectedTab != this.element) {
+      selectedTab.classList.remove("tabs-link-selected");
+      this.tabItem.deselect(this.tabs.selectedItem);
+    } 
+  }
 }
 
 class TabItem {
-  constructor(element) {
+  constructor(element, tabs) {
     // Assign this.element to the passed in element
     this.element = element;
+    //reference to Tabs instance
+    this.tabs = tabs;
   }
 
   select() {
-    // Select all ".tabs-item" elements from the DOM
-       const items = document.querySelectorAll(".tabs-item");
-    // Remove the class "tabs-item-selected" from each element
-       items.forEach(elem => elem.classList.remove("tabs-item-selected"));
     // Add a class named "tabs-item-selected" to this element
-        this.element.classList.add("tabs-item-selected"); 
+        this.element.classList.add("tabs-item-selected");     
+  }
+
+  deselect(selectedItem) {
+    selectedItem.classList.remove("tabs-item-selected");
+    this.tabs.selectedItem = this.element; 
   }
 }
 
@@ -56,11 +78,7 @@ class TabItem {
 - In your .forEach() method's callback function, return a new instance of TabLink and pass in each link as a parameter
 */
 
-links = document.querySelectorAll(".tabs-link").forEach(elem => new TabLink(elem));
-
-/*
-links=document.querySelectorAll(".tabs-link");
-links.forEach(function(elem) {
-  return new TabLink(elem);
-})
-*/
+let links = document.querySelectorAll(".tabs-link");
+let selectedTab = document.querySelector(".tabs-link-selected");
+let selectedItem = document.querySelector(".tabs-item-selected");
+links = new Tabs(links, selectedTab, selectedItem);
