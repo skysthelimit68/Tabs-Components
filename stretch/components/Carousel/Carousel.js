@@ -14,10 +14,12 @@ class Carousel {
 class Item {
     constructor(element, carousel) {
         this.element = element;
-
+        
+        this.carousel = carousel;
+        
         this.data = element.dataset.tab;
 
-        this.carousel = carousel;
+        
     }
 
     next() {
@@ -31,4 +33,4 @@ class Item {
 
 let images = document.querySelectorAll('.img-box');
 let active = document.querySelector(".img-box active");
-images = new CarouselMain (images, active);
+images = new Carousel (images, active);
