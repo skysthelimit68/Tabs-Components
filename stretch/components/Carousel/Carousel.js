@@ -4,9 +4,9 @@ class Carousel {
 
         this.active = active;
 
-        this.item = Array.from(this.elements).map(elem => new Item(elem, this));
+        this.items = Array.from(this.elements).map(elem => new Item(elem, this));
 
-        this.total = this.images.length;
+        this.total = this.items.length;
     }
     
 }
