@@ -1,21 +1,30 @@
 class Carousel {
     constructor(elements, active){
         this.elements = elements;
+
         this.active = active;
-        this.images = Array.from(this.elements).map(elem => new Carousel(elem, this));
+
+        this.item = Array.from(this.elements).map(elem => new Item(elem, this));
+
         this.total = this.images.length;
     }
     
 }
 
-class Image {
-    constructor(element) {
+class Item {
+    constructor(element, carousel) {
         this.element = element;
+
         this.data = element.dataset.tab;
 
+        this.carousel = carousel;
     }
 
     next() {
+        
+    }
+
+    previous() {
 
     }
 }
